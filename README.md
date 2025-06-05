@@ -27,7 +27,7 @@ Se um porto estiver inacessível, ele deve ser ignorado.
 ---
 ## 🧱 Estrutura de Dados Utilizada
 
-### Para o Mapa
+### Mapa
 Representar o mapa como uma matriz de caracteres, onde cada célula indica:
 
     '.' para água navegável.
