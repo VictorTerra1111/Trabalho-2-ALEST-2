@@ -15,7 +15,7 @@ Calcular o menor consumo de combustível para que um barco viking:
     Retorne ao porto 1 após visitar o último porto acessível. 
 
 ---
-## :airplane Regras de Navegação
+## ✈️ Regras de Navegação
 
 Movimentos permitidos: Norte, Sul, Leste e Oeste.
 Cada movimento na mesma direção consome 1 unidade de combustível.
@@ -47,7 +47,7 @@ Armazenar as coordenadas dos portos em um dicionário para acesso rápido.
 Utilizamos o algoritmo de Dijkstra modificado para considerar mudança de direção. 
 
 ---
-## :pen Implementação
+## 🖋️ Implementação
 
 1. Para cada par de portos consecutivos (incluindo o retorno ao porto 1), executar o algoritmo de Dijkstra:
     Inicializar uma fila de prioridade com a posição atual, custo acumulado e direção anterior.
