@@ -1,35 +1,36 @@
 #include <iostream>
-#include "../HPPS/map.hpp"
 #include <fstream>
 #include <string> 
+#include "../HPPS/map.hpp"
 
-Mapa::Mapa(const std::string &caminhoArquivo)
+using namespace std;
+
+Mapa::Mapa(const string &caminhoArquivo)
 {
     carregar(caminhoArquivo);
     achaPortos();
 }
 
-void Mapa::carregar(const std::string &caminhoArquivo)
+void Mapa::carregar(const string &caminhoArquivo)
 {
-    std::ifstream entrada(caminhoArquivo);
+    string linha; 
+    ifstream entrada(caminhoArquivo);
     if (!entrada.is_open())
     {
-        std::cerr << "ERRO: " << caminhoArquivo << std::endl;
+        cerr << "ERRO: " << caminhoArquivo << endl;
         return;
     }
 
     entrada >> linhas >> colunas;
-    entrada.ignore();
+    entrada.ignore(); // para limpar lina nova
 
-    std::string linha;
-    while (std::getline(entrada, linha))
+    while (getline(entrada, linha))
     {
         if (!linha.empty())
         {
             grade.push_back(linha);
         }
     }
-
     entrada.close();
 }
 
@@ -48,10 +49,10 @@ void Mapa::achaPortos()
     }
 }
 
-const std::vector<std::string> &Mapa::getGrade() const { return grade; }
+const vector<string> &Mapa::getGrade() const { return grade; }
 
 int Mapa::getLinhas() const { return linhas; }
 
 int Mapa::getColunas() const { return colunas; }
 
-std::map<char, std::pair<int, int>> Mapa::getPortos() const { return portos; }
+map<char, pair<int, int>> Mapa::getPortos() const { return portos; }

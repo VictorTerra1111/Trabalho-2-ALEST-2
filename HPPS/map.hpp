@@ -9,22 +9,22 @@ using namespace std;
 
 class Mapa
 {
-public:
-    Mapa(const std::string &caminhoArquivo);
+    public:
+        Mapa(const string &caminhoArquivo);
 
-    const std::vector<std::string> &getGrade() const;
-    int getLinhas() const;
-    int getColunas() const;
-    std::map<char, std::pair<int, int>> getPortos() const;
+        const vector<string> &getGrade() const;
+        int getLinhas() const;
+        int getColunas() const;
+        map<char, pair<int, int>> getPortos() const;
 
-private:
-    std::vector<std::string> grade;
-    int linhas;
-    int colunas;
-    std::map<char, std::pair<int, int>> portos;
+    private:
+        vector<string> grade;
+        int linhas;
+        int colunas;
+        map<char, pair<int, int>> portos;
 
-    void carregar(const std::string &caminhoArquivo);
-    void achaPortos();
+        void carregar(const string &caminhoArquivo);
+        void achaPortos();
 };
 
 #endif
