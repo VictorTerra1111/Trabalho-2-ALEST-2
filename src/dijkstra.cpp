@@ -1,13 +1,14 @@
 #include <iostream>
 #include "../HPPS/dijkstra.hpp"
+#include "graph.hpp"
 
 using namespace std;
 
-DijkstraSP::DijkstraSP(const map<pair<int, int>, vector<Edge>> &graphInput, pair<int, int> source) : graph(graphInput)
+Dijkstra::Dijkstra(const Graph &vgraph, pair<int, int> source)  
 {
-    for (const auto &pair : graph)
+    for (const auto &v : vgraph.vertices())
     {
-        distToMap[pair.first] = numeric_limits<double>::infinity();
+        distToMap[v] = numeric_limits<double>::infinity();
     }
     distToMap[source] = 0.0;
 
@@ -18,18 +19,14 @@ DijkstraSP::DijkstraSP(const map<pair<int, int>, vector<Edge>> &graphInput, pair
         pair<int, int> v = pq.top().vertex;
         pq.pop();
 
-        // Verifica se v está presente no grafo (evita exceção ao usar at)
-        if (graph.find(v) != graph.end())
+        for (const Edge &e : vgraph.getAdj(v))
         {
-            for (const Edge &e : graph.at(v))
-            {
-                relax(e);
-            }
+            relax(e);
         }
     }
 }
 
-void DijkstraSP::relax(const Edge &e)
+void Dijkstra::relax(const Edge &e)
 {
     pair<int, int> v = e.from;
     pair<int, int> w = e.to;
@@ -38,32 +35,32 @@ void DijkstraSP::relax(const Edge &e)
     if (distToMap[w] > distToMap[v] + weight)
     {
         distToMap[w] = distToMap[v] + weight;
-        edgeTo[w] = e;
+        edgeToMap[w] = e;
         pq.push({w, distToMap[w]});
     }
 }
 
-bool DijkstraSP::hasPathTo(const pair<int, int> &v) const
+bool Dijkstra::hasPathTo(const pair<int, int> &v) const
 {
     auto it = distToMap.find(v);
     return it != distToMap.end() && it->second != numeric_limits<double>::infinity();
 }
 
-double DijkstraSP::distTo(const pair<int, int> &v) const
+double Dijkstra::distTo(const pair<int, int> &v) const
 {
-    return distToMap.at(v);  // ou use .find para mais segurança
+    return distToMap.at(v);
 }
 
-vector<Edge> DijkstraSP::pathTo(const pair<int, int> &v) const
+vector<Edge> Dijkstra::pathTo(const pair<int, int> &v) const
 {
     vector<Edge> path;
     if (!hasPathTo(v))
         return path;
 
     pair<int, int> current = v;
-    while (edgeTo.find(current) != edgeTo.end())
+    while (edgeToMap.find(current) != edgeToMap.end())
     {
-        const Edge &e = edgeTo.at(current);
+        const Edge &e = edgeToMap.at(current);
         path.insert(path.begin(), e);
         current = e.from;
     }

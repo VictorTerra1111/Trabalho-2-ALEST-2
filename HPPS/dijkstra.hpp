@@ -5,53 +5,41 @@
 #include <map>
 #include <queue>
 #include <limits>
-#include <map>
 #include <string>
+#include "edge.hpp"
+#include "minHeapNode.hpp"
+#include "graph.hpp"
 
 using namespace std;
 
-struct Edge
-{
-    pair<int, int> from;
-    pair<int, int> to;
-    double weight;
-
-    Edge(pair<int, int> v, pair<int, int> w, double wt)
-        : from(v), to(w), weight(wt) {}
-};
-
-struct QueueItem
-{
-    pair<int, int> vertex;
-    double priority;
-    
-    bool operator>(const QueueItem &other) const
-    {
-        return priority > other.priority;
-    }
-};
-
-class DijkstraSP
+class Dijkstra
 {
 public:
-    DijkstraSP(const map<pair<int, int>, vector<Edge>> &graph, pair<int, int> source);
+    Dijkstra(const Graph &vgraph, pair<int, int> source);
+    // recebe o grafo e o vertice de origem
 
     bool hasPathTo(const pair<int, int> &v) const;
+    // existe caminho da origem ateh 'v'?
 
     double distTo(const pair<int, int> &v) const;
+    // menor distancia origem-v
 
     vector<Edge> pathTo(const pair<int, int> &v) const;
+    // vector de arestas do caminho de origem-v
 
 private:
     void relax(const Edge &e);
+    // atualiza distTo
 
-    map<pair<int, int>, Edge> edgeTo;
+    map<pair<int, int>, Edge> edgeToMap;
 
     map<pair<int, int>, double> distToMap;
 
-    priority_queue<QueueItem, vector<QueueItem>, greater<QueueItem>> pq;
+    priority_queue<minHeapNode, vector<minHeapNode>, greater<minHeapNode>> pq;
+    // filha com prioridade: menor custo
 
-    map<pair<int, int>, vector<Edge>> graph;
+    map<pair<int, int>, vector<Edge>> graph; // grafo (um mapa de coordenada e um vector de arestas)
+
 };
 
 #endif

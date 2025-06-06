@@ -18,8 +18,8 @@ class Map
         map<char, pair<int, int>> getHarbor() const;
 
     private:
-        vector<string> matrix;
-        int lines;
+        vector<string> matrix; 
+        int lines; 
         int columns;
         map<char, pair<int, int>> harbors;
 
