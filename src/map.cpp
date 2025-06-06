@@ -5,54 +5,54 @@
 
 using namespace std;
 
-Mapa::Mapa(const string &caminhoArquivo)
+Map::Map(const string &filePath)
 {
-    carregar(caminhoArquivo);
-    achaPortos();
+    load(filePath);
+    findHarbors();
 }
 
-void Mapa::carregar(const string &caminhoArquivo)
+void Map::load(const string &filePath)
 {
-    string linha; 
-    ifstream entrada(caminhoArquivo);
-    if (!entrada.is_open())
+    string line; 
+    ifstream file(filePath);
+    if (!file.is_open())
     {
-        cerr << "ERRO: " << caminhoArquivo << endl;
+        cerr << "ERROR: " << filePath << endl;
         return;
     }
 
-    entrada >> linhas >> colunas;
-    entrada.ignore(); // para limpar lina nova
+    file >> lines >> columns;
+    file.ignore();
 
-    while (getline(entrada, linha))
+    while (getline(file, line))
     {
-        if (!linha.empty())
+        if (!line.empty())
         {
-            grade.push_back(linha);
+            matrix.push_back(line);
         }
     }
-    entrada.close();
+    file.close();
 }
 
-void Mapa::achaPortos()
+void Map::findHarbors()
 {
-    for (int i = 0; i < grade.size(); ++i)
+    for (int i = 0; i < matrix.size(); ++i)
     {
-        for (int j = 0; j < grade[i].size(); ++j)
+        for (int j = 0; j < matrix[i].size(); ++j)
         {
-            char c = grade[i][j];
+            char c = matrix[i][j];
             if (c >= '1' && c <= '9')
             {
-                portos[c] = {i, j};
+                harbors[c] = {i, j};
             }
         }
     }
 }
 
-const vector<string> &Mapa::getGrade() const { return grade; }
+const vector<string> &Map::getMatrix() const { return matrix; }
 
-int Mapa::getLinhas() const { return linhas; }
+int Map::getLines() const { return lines; }
 
-int Mapa::getColunas() const { return colunas; }
+int Map::getColumns() const { return columns; }
 
-map<char, pair<int, int>> Mapa::getPortos() const { return portos; }
+map<char, pair<int, int>> Map::getHarbor() const { return harbors; }

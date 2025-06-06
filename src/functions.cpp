@@ -1,18 +1,18 @@
 #include <iostream>
 #include "../HPPS/functions.hpp"
 
-Direcao qualDir(pair<int, int> ori, pair<int, int> dest){
-    int x = dest.first - ori.first;
-    int y = dest.second - ori.second;
-    if(x == -1 && !y)   return Direcao::Norte;
-    if(x && !y)         return Direcao::Sul;
-    if(!x && y)         return Direcao::Leste;
-    if(!x && y == -1)   return Direcao::Oeste;
-    return Direcao::Null;
+Direction whatDir(pair<int, int> s, pair<int, int> t){
+    int x = t.first - s.first;
+    int y = t.second - s.second;
+    if(x == -1 && !y)   return Direction::North;
+    if(x && !y)         return Direction::South;
+    if(!x && y)         return Direction::East;
+    if(!x && y == -1)   return Direction::West;
+    return Direction::Null;
 }
 
-int trocou(Direcao bef, Direcao now){
-    if(bef == Direcao::Null || bef == now){
+int changedDir(Direction bef, Direction now){
+    if(bef == Direction::Null || bef == now){
         return 0;
     }
     return 3;

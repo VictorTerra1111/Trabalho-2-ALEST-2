@@ -3,16 +3,16 @@
 
 using namespace std;
 
-enum class Direcao{
-    Norte,
-    Sul,
-    Leste, 
-    Oeste,
+enum class Direction{
+    North,
+    South,
+    East, 
+    West,
     Null
 };
 
-Direcao qualDir(pair<int, int> ori, pair<int, int> dest);
+Direction whatDir(pair<int, int> s, pair<int, int> t);
 
-int trocou(Direcao bef, Direcao now);
+int changedDir(Direction bef, Direction now);
 
 #endif

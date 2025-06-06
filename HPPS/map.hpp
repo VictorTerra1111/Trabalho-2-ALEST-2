@@ -7,24 +7,24 @@
 
 using namespace std;
 
-class Mapa
+class Map
 {
     public:
-        Mapa(const string &caminhoArquivo);
+        Map(const string &filePath);
 
-        const vector<string> &getGrade() const;
-        int getLinhas() const;
-        int getColunas() const;
-        map<char, pair<int, int>> getPortos() const;
+        const vector<string> &getMatrix() const;
+        int getLines() const;
+        int getColumns() const;
+        map<char, pair<int, int>> getHarbor() const;
 
     private:
-        vector<string> grade;
-        int linhas;
-        int colunas;
-        map<char, pair<int, int>> portos;
+        vector<string> matrix;
+        int lines;
+        int columns;
+        map<char, pair<int, int>> harbors;
 
-        void carregar(const string &caminhoArquivo);
-        void achaPortos();
+        void load(const string &filePath);
+        void findHarbors();
 };
 
 #endif
