@@ -1,65 +1,66 @@
 #include <iostream>
 #include "../HPPS/dijkstra.hpp"
 
-DijkstraSP::DijkstraSP(const std::map<std::pair<int, int>, std::vector<Edge>> &graphInput, std::pair<int, int> source) : graph(graphInput)
-{
+using namespace std;
 
+DijkstraSP::DijkstraSP(const map<pair<int, int>, vector<Edge>> &graphInput, pair<int, int> source) : graph(graphInput)
+{
     for (const auto &pair : graph)
     {
-        distTo[pair.first] = std::numeric_limits<double>::infinity();
+        distToMap[pair.first] = numeric_limits<double>::infinity();
     }
-    distTo[source] = 0.0;
+    distToMap[source] = 0.0;
 
     pq.push({source, 0.0});
 
     while (!pq.empty())
     {
-        std::pair<int, int> v = pq.top().vertex;
+        pair<int, int> v = pq.top().vertex;
         pq.pop();
 
-        for (const Edge &e : graph.at(v))
+        // Verifica se v está presente no grafo (evita exceção ao usar at)
+        if (graph.find(v) != graph.end())
         {
-            relax(e);
+            for (const Edge &e : graph.at(v))
+            {
+                relax(e);
+            }
         }
     }
 }
 
 void DijkstraSP::relax(const Edge &e)
 {
-    std::pair<int, int> v = e.from;
-    std::pair<int, int> w = e.to;
+    pair<int, int> v = e.from;
+    pair<int, int> w = e.to;
     double weight = e.weight;
 
-    if (distTo[w] > distTo[v] + weight)
+    if (distToMap[w] > distToMap[v] + weight)
     {
-        distTo[w] = distTo[v] + weight;
+        distToMap[w] = distToMap[v] + weight;
         edgeTo[w] = e;
-        pq.push({w, distTo[w]});
+        pq.push({w, distToMap[w]});
     }
 }
 
-bool DijkstraSP::hasPathTo(const std::pair<int, int> &v) const
+bool DijkstraSP::hasPathTo(const pair<int, int> &v) const
 {
-    return distTo.at(v) != std::numeric_limits<double>::infinity();
+    auto it = distToMap.find(v);
+    return it != distToMap.end() && it->second != numeric_limits<double>::infinity();
 }
 
-double DijkstraSP::distTo(const std::pair<int, int> &v) const
+double DijkstraSP::distTo(const pair<int, int> &v) const
 {
-    if (!hasPathTo(v))
-    {
-        std::cerr << "Sem caminho para (" << v.first << ", " << v.second << ")!" << std::endl;
-        return -1;
-    }
-    return distTo.at(v);
+    return distToMap.at(v);  // ou use .find para mais segurança
 }
 
-std::vector<Edge> DijkstraSP::pathTo(const std::pair<int, int> &v) const
+vector<Edge> DijkstraSP::pathTo(const pair<int, int> &v) const
 {
-    std::vector<Edge> path;
+    vector<Edge> path;
     if (!hasPathTo(v))
         return path;
 
-    std::pair<int, int> current = v;
+    pair<int, int> current = v;
     while (edgeTo.find(current) != edgeTo.end())
     {
         const Edge &e = edgeTo.at(current);

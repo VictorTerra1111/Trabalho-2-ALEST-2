@@ -7,46 +7,51 @@
 #include <limits>
 #include <map>
 #include <string>
-#include <iostream>
+
+using namespace std;
 
 struct Edge
 {
-    std::pair<int, int> from;
-    std::pair<int, int> to;
+    pair<int, int> from;
+    pair<int, int> to;
     double weight;
 
-    Edge(std::pair<int, int> v, std::pair<int, int> w, double wt)
+    Edge(pair<int, int> v, pair<int, int> w, double wt)
         : from(v), to(w), weight(wt) {}
+};
+
+struct QueueItem
+{
+    pair<int, int> vertex;
+    double priority;
+    
+    bool operator>(const QueueItem &other) const
+    {
+        return priority > other.priority;
+    }
 };
 
 class DijkstraSP
 {
 public:
-    DijkstraSP(const std::map<std::pair<int, int>, std::vector<Edge>> &graph,
-               std::pair<int, int> source);
+    DijkstraSP(const map<pair<int, int>, vector<Edge>> &graph, pair<int, int> source);
 
-    bool hasPathTo(const std::pair<int, int> &v) const;
-    double distTo(const std::pair<int, int> &v) const;
-    std::vector<Edge> pathTo(const std::pair<int, int> &v) const;
+    bool hasPathTo(const pair<int, int> &v) const;
+
+    double distTo(const pair<int, int> &v) const;
+
+    vector<Edge> pathTo(const pair<int, int> &v) const;
 
 private:
     void relax(const Edge &e);
 
-    std::map<std::pair<int, int>, Edge> edgeTo;
-    double distTo(const std::pair<int, int>& v) const;
+    map<pair<int, int>, Edge> edgeTo;
 
-    struct QueueItem
-    {
-        std::pair<int, int> vertex;
-        double priority;
-        bool operator>(const QueueItem &other) const
-        {
-            return priority > other.priority;
-        }
-    };
+    map<pair<int, int>, double> distToMap;
 
-    std::priority_queue<QueueItem, std::vector<QueueItem>, std::greater<QueueItem>> pq;
-    std::map<std::pair<int, int>, std::vector<Edge>> graph;
+    priority_queue<QueueItem, vector<QueueItem>, greater<QueueItem>> pq;
+
+    map<pair<int, int>, vector<Edge>> graph;
 };
 
 #endif
