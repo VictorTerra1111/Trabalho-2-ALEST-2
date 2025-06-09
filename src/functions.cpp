@@ -1,5 +1,14 @@
 #include <iostream>
+#include <vector>
+#include <map>
+
 #include "../HPPS/functions.hpp"
+#include "../HPPS/graph.hpp"
+#include "../HPPS/graphAssem.hpp"
+#include "../HPPS/dijkstra.hpp"
+#include "../HPPS/map.hpp"
+
+using namespace std;
 
 Direction whatDir(pair<int, int> s, pair<int, int> t)
 {
@@ -26,8 +35,8 @@ int changedDir(Direction bef, Direction now)
     return 3;
 }
 
-constexpr double COST_BASE = 1.0; // Fator para ampliar o custo base
-constexpr double TURN_PENALTY = 3.0; // Penalidade por mudança de direção
+constexpr double COST_BASE = 1.0;      // Fator para ampliar o custo base
+constexpr double TURN_PENALTY = 3.0;   // Penalidade por mudança de direção
 
 double calcPathCostWithPenalty(const std::vector<Edge> &path) {
     if (path.empty()) return 0.0;
@@ -37,11 +46,9 @@ double calcPathCostWithPenalty(const std::vector<Edge> &path) {
 
     for (const auto &edge : path) {
         Direction currDir = whatDir(edge.from, edge.to);
-        
-        // Aplica fator de custo base
+
         cost += edge.weight * COST_BASE;
 
-        // Aplica penalidade se mudou de direção
         if (prevDir != Direction::Null && prevDir != currDir) {
             cost += TURN_PENALTY;
         }
@@ -51,7 +58,6 @@ double calcPathCostWithPenalty(const std::vector<Edge> &path) {
 
     return cost;
 }
-
 
 Graph buildHarborGraph(const Map& map, const map<char, pair<int,int>>& harbors) {
     Graph harborGraph;
@@ -65,7 +71,6 @@ Graph buildHarborGraph(const Map& map, const map<char, pair<int,int>>& harbors) 
             if (dijkstra.hasPathTo(toPos)) {
                 vector<Edge> path = dijkstra.pathTo(toPos);
 
-                // Agora usamos a função com penalidade de curvas
                 double cost = calcPathCostWithPenalty(path);
 
                 harborGraph.addEdge(fromPos, toPos, cost);
