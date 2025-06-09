@@ -1,18 +1,17 @@
 #ifndef MIN_HEAP_NODE_HPP
 #define MIN_HEAP_NODE_HPP
 
-#include <vector>
+#include <utility>
 
-using namespace std;
-
-class minHeapNode
-{
+class minHeapNode {
 public:
-    pair<int, int> vertex;
+    std::pair<int, int> vertex;
     double priority;
 
-    bool operator>(const minHeapNode &other) const
-    {
+    minHeapNode(std::pair<int, int> v = {0, 0}, double p = 0.0)
+        : vertex(v), priority(p) {}
+
+    bool operator>(const minHeapNode &other) const {
         return priority > other.priority;
     }
 };
