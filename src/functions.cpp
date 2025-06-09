@@ -52,9 +52,10 @@ double calcPathCostWithPenalty(const std::vector<Edge> &path) {
     return cost;
 }
 
+
 Graph buildHarborGraph(const Map& map, const map<char, pair<int,int>>& harbors) {
     Graph harborGraph;
-    auto cellGraph = assembleDirGraph(map);
+    auto cellGraph = assembleDirGraph(map);  // Grafo de todas as células navegáveis
 
     for (const auto& [fromLabel, fromPos] : harbors) {
         Dijkstra dijkstra(cellGraph, fromPos);
@@ -63,7 +64,9 @@ Graph buildHarborGraph(const Map& map, const map<char, pair<int,int>>& harbors) 
             if (fromLabel == toLabel) continue;
             if (dijkstra.hasPathTo(toPos)) {
                 vector<Edge> path = dijkstra.pathTo(toPos);
-                double cost = path.size(); // cada célula = custo 1
+
+                // Agora usamos a função com penalidade de curvas
+                double cost = calcPathCostWithPenalty(path);
 
                 harborGraph.addEdge(fromPos, toPos, cost);
             }
