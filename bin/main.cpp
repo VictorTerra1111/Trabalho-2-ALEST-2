@@ -3,6 +3,7 @@
 #include <map>
 #include <algorithm>
 #include <string>
+
 #include "../HPPS/map.hpp"
 #include "../HPPS/graph.hpp"
 #include "../HPPS/graphAssem.hpp"
@@ -23,7 +24,7 @@ int main() {
 
     sort(portoIds.begin(), portoIds.end());
 
-    // Novo grafo entre portos, usando Dijkstra para custo real
+    // Novo grafo entre portos, com custos reais e penalidade de curvas
     Graph portoGraph = buildHarborGraph(mapa, harbors);
 
     double totalFuel = 0;
@@ -48,31 +49,42 @@ int main() {
             break;
 
         vector<Edge> path = dijkstra.pathTo(harbors[portoIds[nextIndex]]);
-        double cost = calcPathCostWithPenalty(path);
+        double cost = 0.0;
+
+        for (const auto& e : path)
+            cost += e.weight;
+
         totalFuel += cost;
 
         trechos.push_back("Trecho " + string(1, portoIds[i]) + " -> " + string(1, portoIds[nextIndex]) + ": " + to_string((int)cost));
-        
+
         lastValidIndex = nextIndex;
         i = nextIndex;
     }
 
+    // Voltar ao porto '1' se possível
     if (!trechos.empty()) {
         char ultimoPorto = portoIds[lastValidIndex];
         if (harbors.find('1') != harbors.end() && ultimoPorto != '1') {
             Dijkstra dijkstraBack(portoGraph, harbors[ultimoPorto]);
             if (dijkstraBack.hasPathTo(harbors['1'])) {
                 vector<Edge> pathBack = dijkstraBack.pathTo(harbors['1']);
-                double costBack = calcPathCostWithPenalty(pathBack);
+                double costBack = 0.0;
+                for (const auto& e : pathBack)
+                    costBack += e.weight;
+
                 totalFuel += costBack;
                 trechos.push_back("Trecho " + string(1, ultimoPorto) + " -> 1: " + to_string((int)costBack));
             }
         }
     }
 
-    cout << "Mapa " << filePath.substr(filePath.find_last_of("/\\") + 1) << " – Combustível mínimo: " << (int)totalFuel << endl;
+    cout << "Mapa " << filePath.substr(filePath.find_last_of("/\\") + 1)
+         << " – Combustível mínimo: " << (int)totalFuel << endl;
+
     for (const string &trecho : trechos)
         cout << trecho << endl;
+
     for (const string &p : portosIgnorados)
         cout << p << endl;
 
