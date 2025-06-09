@@ -12,7 +12,7 @@
 using namespace std;
 
 int main() {
-    string filePath = "TXTS/mapa30.txt";
+    string filePath = "TXTS/mapa100.txt";
 
     Map mapa(filePath);
     map<char, pair<int, int>> harbors = mapa.getHarbor();
@@ -35,14 +35,14 @@ int main() {
     vector<string> portosIgnorados;
 
     size_t i = 0;
-    char lastPorto = portoIds[0];
-    pair<int, int> lastPortoPos = harbors[lastPorto];
+    size_t lastValidIndex = 0;  // Índice do último porto acessível
 
     while (i < portoIds.size() - 1) {
         size_t nextIndex = i + 1;
 
         Dijkstra dijkstra(graph, harbors[portoIds[i]]);
 
+        // Pular portos inacessíveis no caminho
         while (nextIndex < portoIds.size() &&
                !dijkstra.hasPathTo(harbors[portoIds[nextIndex]])) {
             portosIgnorados.push_back("Porto " + string(1, portoIds[nextIndex]) + " inacessível – ignorado)");
@@ -57,22 +57,22 @@ int main() {
         totalFuel += cost;
 
         trechos.push_back("Trecho " + string(1, portoIds[i]) + " -> " + string(1, portoIds[nextIndex]) + ": " + to_string((int)cost));
-
-        // Atualiza último porto acessível
-        lastPorto = portoIds[nextIndex];
-        lastPortoPos = harbors[lastPorto];
-
+        
+        lastValidIndex = nextIndex;  // Atualiza último porto acessível
         i = nextIndex;
     }
 
-    // Verifica se pode voltar ao porto 1
-    if (harbors.find('1') != harbors.end() && lastPorto != '1') {
-        Dijkstra dijkstraBack(graph, lastPortoPos);
-        if (dijkstraBack.hasPathTo(harbors['1'])) {
-            vector<Edge> pathBack = dijkstraBack.pathTo(harbors['1']);
-            double costBack = calcPathCostWithPenalty(pathBack);
-            totalFuel += costBack;
-            trechos.push_back("Trecho " + string(1, lastPorto) + " -> 1: " + to_string((int)costBack));
+    // Retornar ao porto 1 a partir do último porto acessível
+    if (!trechos.empty()) {
+        char ultimoPorto = portoIds[lastValidIndex];  // último porto acessível
+        if (harbors.find('1') != harbors.end() && ultimoPorto != '1') {
+            Dijkstra dijkstraBack(graph, harbors[ultimoPorto]);
+            if (dijkstraBack.hasPathTo(harbors['1'])) {
+                vector<Edge> pathBack = dijkstraBack.pathTo(harbors['1']);
+                double costBack = calcPathCostWithPenalty(pathBack);
+                totalFuel += costBack;
+                trechos.push_back("Trecho " + string(1, ultimoPorto) + " -> 1: " + to_string((int)costBack));
+            }
         }
     }
 

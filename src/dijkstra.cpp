@@ -1,68 +1,96 @@
-#include <iostream>
 #include "../HPPS/dijkstra.hpp"
-#include "../HPPS/graph.hpp"
+#include <limits>
 
-using namespace std;
-
-Dijkstra::Dijkstra(const Graph &vgraph, pair<int, int> source)  
+Dijkstra::Dijkstra(const Graph &vgraph, std::pair<int, int> source) : graph(vgraph)
 {
-    for (const auto &v : vgraph.vertices())
-    {
-        distToMap[v] = numeric_limits<double>::infinity();
-    }
-    distToMap[source] = 0.0;
+    distToMap[{source, Direction::Null}] = 0.0;
+    bestDistVertex[source] = 0.0;
 
-    pq.push({source, 0.0});
+    pq.push({{source, Direction::Null}, 0.0});
 
     while (!pq.empty())
     {
-        pair<int, int> v = pq.top().vertex;
+        PQElement current = pq.top();
         pq.pop();
 
-        for (const Edge &e : vgraph.getAdj(v))
+        State state = current.state;
+        double cost = current.cost;
+
+        // Ignorar se já existe caminho melhor para este estado
+        if (distToMap[{state.vertex, state.dir}] < cost)
+            continue;
+
+        for (const Edge &e : graph.getAdj(state.vertex))
         {
-            relax(e);
+            relax(state, e);
         }
     }
 }
 
-void Dijkstra::relax(const Edge &e)
+void Dijkstra::relax(const State &state, const Edge &edge)
 {
-    pair<int, int> v = e.from;
-    pair<int, int> w = e.to;
-    double weight = e.weight;
+    Direction prevDir = state.dir;
+    Direction currDir = whatDir(edge.from, edge.to);
 
-    if (distToMap[w] > distToMap[v] + weight)
+    double penalty = 0.0;
+    if (prevDir != Direction::Null && prevDir != currDir)
+        penalty = 3.0;
+
+    double newDist = distToMap[{state.vertex, prevDir}] + edge.weight + penalty;
+
+    auto nextState = std::make_pair(edge.to, currDir);
+
+    if (distToMap.find(nextState) == distToMap.end() || distToMap[nextState] > newDist)
     {
-        distToMap[w] = distToMap[v] + weight;
-        edgeToMap[w] = e;
-        pq.push({w, distToMap[w]});
+        distToMap[nextState] = newDist;
+        edgeToMap[nextState] = edge;
+        pq.push({{edge.to, currDir}, newDist});
+
+        if (bestDistVertex.find(edge.to) == bestDistVertex.end() || bestDistVertex[edge.to] > newDist)
+            bestDistVertex[edge.to] = newDist;
     }
 }
 
-bool Dijkstra::hasPathTo(const pair<int, int> &v) const
+bool Dijkstra::hasPathTo(const std::pair<int, int> &v) const
 {
-    auto it = distToMap.find(v);
-    return it != distToMap.end() && it->second != numeric_limits<double>::infinity();
+    return bestDistVertex.find(v) != bestDistVertex.end();
 }
 
-double Dijkstra::distTo(const pair<int, int> &v) const
+double Dijkstra::distTo(const std::pair<int, int> &v) const
 {
-    return distToMap.at(v);
+    auto it = bestDistVertex.find(v);
+    if (it == bestDistVertex.end())
+        return std::numeric_limits<double>::infinity();
+    return it->second;
 }
 
-vector<Edge> Dijkstra::pathTo(const pair<int, int> &v) const
+std::vector<Edge> Dijkstra::pathTo(const std::pair<int, int> &v) const
 {
-    vector<Edge> path;
-    if (!hasPathTo(v))
-        return path;
+    std::vector<Edge> bestPath;
+    double bestCost = std::numeric_limits<double>::infinity();
+    Direction bestDir = Direction::Null;
 
-    pair<int, int> current = v;
+    for (const auto &[key, cost] : distToMap)
+    {
+        if (key.first == v && cost < bestCost)
+        {
+            bestCost = cost;
+            bestDir = key.second;
+        }
+    }
+
+    if (bestCost == std::numeric_limits<double>::infinity())
+        return bestPath;
+
+    std::pair<std::pair<int, int>, Direction> current = {v, bestDir};
+
     while (edgeToMap.find(current) != edgeToMap.end())
     {
         const Edge &e = edgeToMap.at(current);
-        path.insert(path.begin(), e);
-        current = e.from;
+        bestPath.insert(bestPath.begin(), e);
+        Direction prevDir = whatDir(e.from, e.to);
+        current = {e.from, prevDir};
     }
-    return path;
+
+    return bestPath;
 }

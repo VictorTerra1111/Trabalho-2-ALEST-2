@@ -4,42 +4,48 @@
 #include <vector>
 #include <map>
 #include <queue>
-#include <limits>
-#include <string>
-#include "edge.hpp"
-#include "minHeapNode.hpp"
-#include "graph.hpp"
+#include <utility>
+#include "../HPPS/graph.hpp"
+#include "../HPPS/functions.hpp" // Para Direction, whatDir()
 
-using namespace std;
+struct State {
+    std::pair<int, int> vertex;
+    Direction dir; // direção de chegada até vertex
 
-class Dijkstra
-{
-public:
-    Dijkstra(const Graph &vgraph, pair<int, int> source);
-    // recebe o grafo e o vertice de origem
-
-    bool hasPathTo(const pair<int, int> &v) const;
-    // existe caminho da origem ateh 'v'?
-
-    double distTo(const pair<int, int> &v) const;
-    // menor distancia origem-v
-
-    vector<Edge> pathTo(const pair<int, int> &v) const;
-    // vector de arestas do caminho de origem-v
-
-private:
-    void relax(const Edge &e);
-    // atualiza distTo
-
-    map<pair<int, int>, Edge> edgeToMap;
-
-    map<pair<int, int>, double> distToMap;
-
-    priority_queue<minHeapNode, vector<minHeapNode>, greater<minHeapNode>> pq;
-    // filha com prioridade: menor custo
-
-    map<pair<int, int>, vector<Edge>> graph; // grafo (um mapa de coordenada e um vector de arestas)
-
+    bool operator<(const State &other) const = delete; // Não usar comparação padrão
 };
 
-#endif
+struct PQElement {
+    State state;
+    double cost;
+
+    bool operator<(const PQElement &other) const {
+        return cost > other.cost; // min-heap
+    }
+};
+
+class Dijkstra {
+public:
+    Dijkstra(const Graph &graph, std::pair<int, int> source);
+
+    bool hasPathTo(const std::pair<int, int> &v) const;
+
+    double distTo(const std::pair<int, int> &v) const;
+
+    std::vector<Edge> pathTo(const std::pair<int, int> &v) const;
+
+private:
+    void relax(const State &state, const Edge &edge);
+
+    const Graph &graph;
+
+    // distToMap indexed by (vertex, direction)
+    std::map<std::pair<std::pair<int, int>, Direction>, double> distToMap;
+    std::map<std::pair<std::pair<int, int>, Direction>, Edge> edgeToMap;
+
+    std::priority_queue<PQElement> pq;
+
+    std::map<std::pair<int, int>, double> bestDistVertex;
+};
+
+#endif // DIJKSTRA_HPP

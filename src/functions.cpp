@@ -26,6 +26,9 @@ int changedDir(Direction bef, Direction now)
     return 3;
 }
 
+constexpr double COST_BASE = 10.0; // Fator para ampliar o custo base
+constexpr double TURN_PENALTY = 3.0; // Penalidade por mudança de direção
+
 double calcPathCostWithPenalty(const std::vector<Edge> &path) {
     if (path.empty()) return 0.0;
 
@@ -34,8 +37,15 @@ double calcPathCostWithPenalty(const std::vector<Edge> &path) {
 
     for (const auto &edge : path) {
         Direction currDir = whatDir(edge.from, edge.to);
-        cost += edge.weight; // normalmente 1.0
-        cost += changedDir(prevDir, currDir);
+        
+        // Aplica fator de custo base
+        cost += edge.weight * COST_BASE;
+
+        // Aplica penalidade se mudou de direção
+        if (prevDir != Direction::Null && prevDir != currDir) {
+            cost += TURN_PENALTY;
+        }
+
         prevDir = currDir;
     }
 
