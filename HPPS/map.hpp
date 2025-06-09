@@ -4,27 +4,26 @@
 #include <vector>
 #include <string>
 #include <map>
-
-using namespace std;
+#include <utility>
 
 class Map
 {
-    public:
-        Map(const string &filePath);
+public:
+    Map(const std::string &filePath);
 
-        const vector<string> &getMatrix() const;
-        int getLines() const;
-        int getColumns() const;
-        map<char, pair<int, int>> getHarbor() const;
+    const std::vector<std::string> &getMatrix() const;
+    int getLines() const;
+    int getColumns() const;
+    std::map<char, std::pair<int, int>> getHarbor() const;
 
-    private:
-        vector<string> matrix; 
-        int lines; 
-        int columns;
-        map<char, pair<int, int>> harbors;
+private:
+    std::vector<std::string> matrix; 
+    int lines; 
+    int columns;
+    std::map<char, std::pair<int, int>> harbors;
 
-        void load(const string &filePath);
-        void findHarbors();
+    void load(const std::string &filePath);
+    void findHarbors();
 };
 
 #endif
