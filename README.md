@@ -15,7 +15,7 @@ Calcular o menor consumo de combustível para que um barco viking:
     Retorne ao porto 1 após visitar o último porto acessível. 
 
 ---
-## ✈️ Regras de Navegação
+## ⛵ Regras de Navegação
 
 Movimentos permitidos: Norte, Sul, Leste e Oeste.
 Cada movimento na mesma direção consome 1 unidade de combustível.
