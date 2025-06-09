@@ -26,7 +26,7 @@ int changedDir(Direction bef, Direction now)
     return 3;
 }
 
-constexpr double COST_BASE = 10.0; // Fator para ampliar o custo base
+constexpr double COST_BASE = 1.0; // Fator para ampliar o custo base
 constexpr double TURN_PENALTY = 3.0; // Penalidade por mudança de direção
 
 double calcPathCostWithPenalty(const std::vector<Edge> &path) {
