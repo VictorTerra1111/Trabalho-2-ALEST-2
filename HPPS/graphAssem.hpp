@@ -7,6 +7,7 @@
 #include "functions.hpp"
 #include "dijkstra.hpp"
 #include "map.hpp"
+#include "edge.hpp"
 
 using namespace std;
 
