@@ -1,12 +1,16 @@
-#ifndef GRAPH_ASSEM_HPP
-#define GRAPH_ASSEM_HPP
+#ifndef GRAPHASSEMBLER_HPP
+#define GRAPHASSEMBLER_HPP
 
 #include <map>
 #include <vector>
-#include <utility>
-#include "edge.hpp"
+
+#include "functions.hpp"
+#include "dijkstra.hpp"
 #include "map.hpp"
+#include "edge.hpp"
 
-std::map<std::pair<int, int>, std::vector<Edge>> assembleDirGraph(const Map &vmap);
+using namespace std;
 
-#endif 
+map<pair<int, int>, vector<Edge>> assembleDirGraph(const Map &vmap);
+
+#endif
