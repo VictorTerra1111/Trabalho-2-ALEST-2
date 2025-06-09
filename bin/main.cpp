@@ -23,26 +23,21 @@ int main() {
 
     sort(portoIds.begin(), portoIds.end());
 
-    map<pair<int, int>, vector<Edge>> rawGraph = assembleDirGraph(mapa);
-    Graph graph;
-    for (const auto &entry : rawGraph) {
-        for (const Edge &e : entry.second)
-            graph.addEdge(e.from, e.to, e.weight);
-    }
+    // Novo grafo entre portos, usando Dijkstra para custo real
+    Graph portoGraph = buildHarborGraph(mapa, harbors);
 
     double totalFuel = 0;
     vector<string> trechos;
     vector<string> portosIgnorados;
 
     size_t i = 0;
-    size_t lastValidIndex = 0;  // Índice do último porto acessível
+    size_t lastValidIndex = 0;
 
     while (i < portoIds.size() - 1) {
         size_t nextIndex = i + 1;
 
-        Dijkstra dijkstra(graph, harbors[portoIds[i]]);
+        Dijkstra dijkstra(portoGraph, harbors[portoIds[i]]);
 
-        // Pular portos inacessíveis no caminho
         while (nextIndex < portoIds.size() &&
                !dijkstra.hasPathTo(harbors[portoIds[nextIndex]])) {
             portosIgnorados.push_back("Porto " + string(1, portoIds[nextIndex]) + " inacessível – ignorado)");
@@ -58,15 +53,14 @@ int main() {
 
         trechos.push_back("Trecho " + string(1, portoIds[i]) + " -> " + string(1, portoIds[nextIndex]) + ": " + to_string((int)cost));
         
-        lastValidIndex = nextIndex;  // Atualiza último porto acessível
+        lastValidIndex = nextIndex;
         i = nextIndex;
     }
 
-    // Retornar ao porto 1 a partir do último porto acessível
     if (!trechos.empty()) {
-        char ultimoPorto = portoIds[lastValidIndex];  // último porto acessível
+        char ultimoPorto = portoIds[lastValidIndex];
         if (harbors.find('1') != harbors.end() && ultimoPorto != '1') {
-            Dijkstra dijkstraBack(graph, harbors[ultimoPorto]);
+            Dijkstra dijkstraBack(portoGraph, harbors[ultimoPorto]);
             if (dijkstraBack.hasPathTo(harbors['1'])) {
                 vector<Edge> pathBack = dijkstraBack.pathTo(harbors['1']);
                 double costBack = calcPathCostWithPenalty(pathBack);
@@ -76,8 +70,7 @@ int main() {
         }
     }
 
-    // Impressão final
-    cout << "Mapa " << filePath << " – Combustível mínimo: " << (int)totalFuel << endl;
+    cout << "Mapa " << filePath.substr(filePath.find_last_of("/\\") + 1) << " – Combustível mínimo: " << (int)totalFuel << endl;
     for (const string &trecho : trechos)
         cout << trecho << endl;
     for (const string &p : portosIgnorados)
