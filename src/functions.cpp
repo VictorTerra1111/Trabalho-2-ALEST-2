@@ -51,3 +51,24 @@ double calcPathCostWithPenalty(const std::vector<Edge> &path) {
 
     return cost;
 }
+
+Graph buildHarborGraph(const Map& map, const map<char, pair<int,int>>& harbors) {
+    Graph harborGraph;
+    auto cellGraph = assembleDirGraph(map);
+
+    for (const auto& [fromLabel, fromPos] : harbors) {
+        Dijkstra dijkstra(cellGraph, fromPos);
+
+        for (const auto& [toLabel, toPos] : harbors) {
+            if (fromLabel == toLabel) continue;
+            if (dijkstra.hasPathTo(toPos)) {
+                vector<Edge> path = dijkstra.pathTo(toPos);
+                double cost = path.size(); // cada célula = custo 1
+
+                harborGraph.addEdge(fromPos, toPos, cost);
+            }
+        }
+    }
+
+    return harborGraph;
+}
