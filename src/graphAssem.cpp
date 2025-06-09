@@ -1,6 +1,7 @@
 #include <iostream>
 #include "../HPPS/graphAssem.hpp"
 
+using namespace std;
 
 map<pair<int, int>, vector<Edge>> assembleDirGraph(const Map &vmap){
     map<pair<int, int>, vector<Edge>> graph;
@@ -36,5 +37,3 @@ map<pair<int, int>, vector<Edge>> assembleDirGraph(const Map &vmap){
     }
     return graph;
 }
-
-using namespace std;

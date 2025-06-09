@@ -1,6 +1,6 @@
 #include <iostream>
 #include "../HPPS/dijkstra.hpp"
-#include "graph.hpp"
+#include "../HPPS/graph.hpp"
 
 using namespace std;
 
