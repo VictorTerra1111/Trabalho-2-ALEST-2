@@ -2,10 +2,11 @@
 ---
 ## LINK DA RUBRICA: https://mflash.github.io/alest2/trab/t2-251-jsdgfutdfvytgfkmnx/
 
-## LINK DO VIDEO APRESENTAÇÃO: 
-
 Para implementar o Trabalho 2 da disciplina Algoritmos e Estruturas de Dados II, intitulado "As Velas se Erguem Novamente", é necessário desenvolver um algoritmo que calcule o mínimo de combustível necessário para que os vikings percorram uma sequência de portos em um mapa, considerando restrições de movimentação e penalidades por mudança de direção. 
 
+## 🎥 Apresentação do Trabalho
+---
+LINK: 
 ---
 ## 🧭 Resumo Básico
 
@@ -64,17 +65,3 @@ Utilizamos o algoritmo de Dijkstra modificado para considerar mudança de direç
 2. Se não for possível alcançar o próximo porto, ignorá-lo e continuar para o seguinte. 
  
 ---
-
-## 🎥 Apresentação do Trabalho
-
-1. Introdução ao Problema (1 ponto):
-Texto
-
-2. Soluções e Algoritmos (3 pontos):
-Texto 
-
-3. Resultados (3 pontos):
-Texto
-
-4. Conclusão (1 ponto):
-Texto
