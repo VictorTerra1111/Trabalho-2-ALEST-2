@@ -165,7 +165,7 @@ public:
             }
         }
 
-        return -1; // unreachable
+        return -1;
     }
 };
 
@@ -174,7 +174,7 @@ int main()
     ifstream file("TXTS/mapateste-80.txt");
     if (!file)
     {
-        cerr << "Erro ao abrir mapateste-80.txt\n";
+        cerr << "ERROR: mapateste-80.txt\n";
         return 1;
     }
 
@@ -235,9 +235,9 @@ int main()
             break;
     }
 
-    cout << "Mapa 100 – Combustível mínimo: " << totalFuel << "\n";
+    cout << "Combustível mínimo: " << totalFuel << "\n";
 
-    for (size_t k = 0; k < rota.size() - 1; ++k)
+    for (size_t k = 0; k < rota.size() -1 ; ++k)
     {
         int p1 = rota[k];
         int p2 = rota[k + 1];
@@ -250,7 +250,7 @@ int main()
 
             if (find(inaccessiveis.begin(), inaccessiveis.end(), p2) != inaccessiveis.end())
             {
-                cout << "Porto " << p2 << " inacessível – ignorado)\n";
+                cout << "Porto " << p2 << " inacessível - ignorado)\n";
             }
             continue;
         }
