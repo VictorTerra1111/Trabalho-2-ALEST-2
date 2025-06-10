@@ -170,7 +170,7 @@ public:
 
 int main()
 {
-    ifstream file("TXTS/mapa800.txt"); // ALTERERAR AQUI PARA OUTROS TESTES (manter TXTS/)
+    ifstream file("TXTS/mapateste-80.txt"); // ALTERERAR AQUI PARA OUTROS TESTES (manter TXTS/)
     if (!file)
     {
         cerr << "ERROR ABRINDO MAPA\n";
