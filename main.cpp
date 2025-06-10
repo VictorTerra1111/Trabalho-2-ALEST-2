@@ -171,10 +171,10 @@ public:
 
 int main()
 {
-    ifstream file("../TXTS/mapa1000.txt");
+    ifstream file("TXTS/mapateste-80.txt");
     if (!file)
     {
-        cerr << "Erro ao abrir mapa100.txt\n";
+        cerr << "Erro ao abrir mapateste-80.txt\n";
         return 1;
     }
 
