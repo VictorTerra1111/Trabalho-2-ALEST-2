@@ -171,10 +171,10 @@ public:
 
 int main()
 {
-    ifstream file("TXTS/mapateste-80.txt");
+    ifstream file("TXTS/mapateste-80.txt"); // ALTERERAR AQUI PARA OUTROS TESTES (manter TXTS/)
     if (!file)
     {
-        cerr << "ERROR: mapateste-80.txt\n";
+        cerr << "ERROR ABRINDO MAPA\n";
         return 1;
     }
 
