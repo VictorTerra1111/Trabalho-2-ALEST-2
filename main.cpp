@@ -164,21 +164,23 @@ public:
                 }
             }
         }
-
         return -1;
     }
 };
 
 int main()
 {
-    ifstream file("TXTS/mapateste-80.txt"); // ALTERERAR AQUI PARA OUTROS TESTES (manter TXTS/)
+    ifstream file("TXTS/mapa800.txt"); // ALTERERAR AQUI PARA OUTROS TESTES (manter TXTS/)
     if (!file)
     {
         cerr << "ERROR ABRINDO MAPA\n";
         return 1;
     }
-
+    bool h_ignored;
     int rows, cols;
+    int totalFuel = 0;
+    size_t i = 0;
+
     file >> rows >> cols;
     file.ignore();
 
@@ -187,13 +189,11 @@ int main()
 
     Navigator_c nav(mapa);
 
-    int totalFuel = 0;
     vector<int> inaccessiveis;
     map<int, int> trechoFuel;
 
     vector<int> rota = {1, 2, 3, 4, 5, 6, 7, 8, 9, 1};
 
-    size_t i = 0;
     while (i < rota.size() - 1)
     {
         int p1 = rota[i];
@@ -251,13 +251,15 @@ int main()
             if (find(inaccessiveis.begin(), inaccessiveis.end(), p2) != inaccessiveis.end())
             {
                 cout << "Porto " << p2 << " inacessível - ignorado)\n";
+                h_ignored = true;
             }
             continue;
         }
-
-        cout << "Trecho " << p1 << " -> " << p2 << ": " << trechoFuel[p1] << "\n";
+        //   cout << "Trecho " << p1 << " -> " << p2 << ": " << trechoFuel[p1] << "\n";
     }
-    
+
+    if (!h_ignored)
+        cout << "Nenhum porto ignorado." << endl;
 
     return 0;
 }
