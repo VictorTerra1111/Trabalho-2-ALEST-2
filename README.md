@@ -6,7 +6,7 @@ Para implementar o Trabalho 2 da disciplina Algoritmos e Estruturas de Dados II,
 
 ## 🎥 Apresentação do Trabalho
 ---
-LINK: 
+LINK: https://www.youtube.com/watch?v=YRn_LhLxcoU
 ---
 ## 🧭 Resumo Básico
 
